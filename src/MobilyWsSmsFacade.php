@@ -1,14 +1,14 @@
 <?php
 
-namespace Abdualrhmanio\JawalbSms;
+namespace Abdualrhmanio\MobilyWsSms;
 
 
 use Illuminate\Support\Facades\Facade;
 
-class JawalbSmsFacade extends Facade {
+class MobilyWsSmsFacade extends Facade {
 
     protected static function getFacadeAccessor() {
-        return 'jawalbsms';
+        return 'mobilywssms';
     }
 
 }
