@@ -56,7 +56,7 @@ You need to fill in `mobilywssms.php` file that is found in your applications `c
 
 You can easily send a SMS to Specific Number with the command
 
-    \jawalbsms::sendSMS("Some Message","PhoneNumber");
+    \mobilywssms::sendSMS("Some Message","PhoneNumber");
 
     
 
