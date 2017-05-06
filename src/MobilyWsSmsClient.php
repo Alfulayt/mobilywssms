@@ -1,12 +1,12 @@
 <?php
 
-namespace Abdualrhmanio\JawalbSms;
+namespace Abdualrhmanio\MobilyWsSms;
 
 use GuzzleHttp\Client;
 
-class JawalbSmsClient
+class MobilyWsSmsClient
 {
-    const API_URL = "http://www.jawalbsms.ws/api.php/sendsms";
+    const API_URL = "http://www.mobilywebservices.com:86/SMSWebService/SMSIntegration.asmx?wsdl";
 
     private $client;
     private $headers;
@@ -20,7 +20,7 @@ class JawalbSmsClient
     public function __construct($appId, $restApiKey, $userAuthKey)
     {
 
-        $this->configs = \Config::get('jawalbsms');
+        $this->configs = \Config::get('mobilywssms');
 
         $this->client = new Client();
         $this->headers = ['headers' => []];
@@ -34,22 +34,45 @@ class JawalbSmsClient
       $this->password   = $this->configs["Password"];
       $this->senderName = $this->configs["SenderName"];
 
+      $message = iconv('windows-1256','UTF-8', $message);		
+      $MsgID = rand(1,99999);
+      $timeSend = 0;
+      $dateSend = 0;	
+      $deleteKey = rand(1,99999);
 
       if(is_null($message) or !isset($message) or is_null($to) or !isset($to)) {
           throw new \Exception('MESSAGE And TO Number are Require');
       }
+						
+            $sendSMSParam = array(
+                      'userName'=>$this->username,
+                      'password'=>$this->password,
+                      'numbers'=>$to, 
+                      'sender'=>$this->senderName, 
+                      'message'=>$message, 
+                      'dateSend'=>$dateSend, 
+                      'timeSend'=>$timeSend, 
+                      'deleteKey'=>$deleteKey, 
+                      'messageId'=> $MsgID, 
+                      'applicationType'=>'24',
+                      'domainName'=>''
+                      );
+
+     $client = new \SoapClient(self::API_URL);
 
 
-      return $this->client->get(self::API_URL,['query' =>
-            [
-              'user' => $this->username,
-              'pass' => $this->password,
-              'to'   => $to,
-              'unicode' => 'u',
-              'message' => $message,
-              'sender' => $this->senderName
-            ]
-         ]);
+     return $client->SendSMS($sendSMSParam);
+
+    //   return $this->client->get(self::API_URL,['query' =>
+    //         [
+    //           'user' => $this->username,
+    //           'pass' => $this->password,
+    //           'to'   => $to,
+    //           'unicode' => 'u',
+    //           'message' => $message,
+    //           'sender' => $this->senderName
+    //         ]
+    //      ]);
 
     }
 
