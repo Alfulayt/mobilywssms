@@ -34,7 +34,7 @@ class MobilyWsSmsClient
       $this->password   = $this->configs["Password"];
       $this->senderName = $this->configs["SenderName"];
 
-      $message = iconv('windows-1256','UTF-8', $message);		
+      //$message = iconv('windows-1256','UTF-8', $message);		
       $MsgID = rand(1,99999);
       $timeSend = 0;
       $dateSend = 0;	
@@ -49,7 +49,7 @@ class MobilyWsSmsClient
                       'password'=>$this->password,
                       'numbers'=>$to, 
                       'sender'=>$this->senderName, 
-                      'message'=>$message, 
+                      'message'=>  $this->convertToUnicode($message), 
                       'dateSend'=>$dateSend, 
                       'timeSend'=>$timeSend, 
                       'deleteKey'=>$deleteKey, 
