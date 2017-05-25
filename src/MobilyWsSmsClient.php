@@ -49,12 +49,12 @@ class MobilyWsSmsClient
                       'password'=>$this->password,
                       'numbers'=>$to, 
                       'sender'=>$this->senderName, 
-                      'message'=>  $this->convertToUnicode($message), 
+                      'message'=>  $message, 
                       'dateSend'=>$dateSend, 
                       'timeSend'=>$timeSend, 
                       'deleteKey'=>$deleteKey, 
                       'messageId'=> $MsgID, 
-                      'applicationType'=>'24',
+                      'applicationType'=>'68',
                       'domainName'=>''
                       );
 
