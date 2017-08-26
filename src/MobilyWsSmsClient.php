@@ -60,7 +60,7 @@ function sendSMS($message,$to)
     $result = stream_get_contents($handle);
 
 
-	$result = printStringResult(trim($result), $arraySendMsg);
+	//$result = printStringResult(trim($result), $arraySendMsg);
 	return $result;
 }
 
