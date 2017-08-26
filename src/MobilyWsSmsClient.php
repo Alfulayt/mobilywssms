@@ -28,53 +28,90 @@ class MobilyWsSmsClient
     }
 
 
+function sendSMS($message,$to)
+{
+    $this->username   = $this->configs["Username"];
+    $this->password   = $this->configs["Password"];
+    $this->senderName = $this->configs["SenderName"];
+    $MsgID = rand(1,99999);
+    $deleteKey = rand(1,99999);
+	global $arraySendMsg;
+	$applicationType = "68";  
+	$domainName = $_SERVER['SERVER_NAME'];
 
-    public function sendSMS($message,$to) {
-      $this->username   = $this->configs["Username"];
-      $this->password   = $this->configs["Password"];
-      $this->senderName = $this->configs["SenderName"];
+	$contextPostValues = http_build_query(array(
+        'mobile'=> $this->username,
+        'password'=>$this->password,
+        'numbers'=>$to,
+        'sender'=>urlencode($this->senderName),
+        'msg'=>$message, 
+        'timeSend'=>0, 
+        'dateSend'=>0, 
+        'applicationType'=>$applicationType, 
+        'domainName'=>$domainName, 
+        'msgId'=> $MsgID, 
+        'deleteKey'=>$deleteKey,
+        'lang'=>'3'));
 
-      //$message = iconv('windows-1256','UTF-8', $message);		
-      $MsgID = rand(1,99999);
-      $timeSend = 0;
-      $dateSend = 0;	
-      $deleteKey = rand(1,99999);
+	$contextOptions['http'] = array('method' => 'POST', 'header'=>'Content-type: application/x-www-form-urlencoded', 'content'=> $contextPostValues, 'max_redirects'=>0, 'protocol_version'=> 1.0, 'timeout'=>10, 'ignore_errors'=>TRUE);
+	$contextResouce  = stream_context_create($contextOptions);
+	$url = "http://www.mobily.ws/api/msgSend.php";
+	$handle = fopen($url, 'r', false, $contextResouce);
+    $result = stream_get_contents($handle);
 
-      if(is_null($message) or !isset($message) or is_null($to) or !isset($to)) {
-          throw new \Exception('MESSAGE And TO Number are Require');
-      }
+
+	$result = printStringResult(trim($result), $arraySendMsg);
+	return $result;
+}
+
+
+
+    // public function sendSMS($message,$to) {
+    //   $this->username   = $this->configs["Username"];
+    //   $this->password   = $this->configs["Password"];
+    //   $this->senderName = $this->configs["SenderName"];
+
+    //   //$message = iconv('windows-1256','UTF-8', $message);		
+    //   $MsgID = rand(1,99999);
+    //   $timeSend = 0;
+    //   $dateSend = 0;	
+    //   $deleteKey = rand(1,99999);
+
+    //   if(is_null($message) or !isset($message) or is_null($to) or !isset($to)) {
+    //       throw new \Exception('MESSAGE And TO Number are Require');
+    //   }
 						
-            $sendSMSParam = array(
-                      'userName'=>$this->username,
-                      'password'=>$this->password,
-                      'numbers'=>$to, 
-                      'sender'=>$this->senderName, 
-                      'message'=>  $message, 
-                      'dateSend'=>$dateSend, 
-                      'timeSend'=>$timeSend, 
-                      'deleteKey'=>$deleteKey, 
-                      'messageId'=> $MsgID, 
-                      'applicationType'=>'68',
-                      'domainName'=>''
-                      );
+    //         $sendSMSParam = array(
+    //                   'userName'=>$this->username,
+    //                   'password'=>$this->password,
+    //                   'numbers'=>$to, 
+    //                   'sender'=>$this->senderName, 
+    //                   'message'=>  $message, 
+    //                   'dateSend'=>$dateSend, 
+    //                   'timeSend'=>$timeSend, 
+    //                   'deleteKey'=>$deleteKey, 
+    //                   'messageId'=> $MsgID, 
+    //                   'applicationType'=>'68',
+    //                   'domainName'=>''
+    //                   );
 
-     $client = new \SoapClient(self::API_URL);
+    //  $client = new \SoapClient(self::API_URL);
 
 
-     return $client->SendSMS($sendSMSParam);
+    //  return $client->SendSMS($sendSMSParam);
 
-    //   return $this->client->get(self::API_URL,['query' =>
-    //         [
-    //           'user' => $this->username,
-    //           'pass' => $this->password,
-    //           'to'   => $to,
-    //           'unicode' => 'u',
-    //           'message' => $message,
-    //           'sender' => $this->senderName
-    //         ]
-    //      ]);
+    // //   return $this->client->get(self::API_URL,['query' =>
+    // //         [
+    // //           'user' => $this->username,
+    // //           'pass' => $this->password,
+    // //           'to'   => $to,
+    // //           'unicode' => 'u',
+    // //           'message' => $message,
+    // //           'sender' => $this->senderName
+    // //         ]
+    // //      ]);
 
-    }
+    // }
 
 
 
